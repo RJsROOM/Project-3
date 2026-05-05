@@ -1,0 +1,9 @@
+{
+  "name": "employee-management-system",
+  "private": true,
+  "scripts": {
+    "postinstall": "npm install --prefix Backend && npm install --prefix Frontend",
+    "build": "npm run build --prefix Backend",
+    "start": "npm start --prefix Backend"
+  }
+}

@@ -13,7 +13,7 @@ const CreateTask = ({ onTaskCreated }) => {
     const token = localStorage.getItem("token");
 
     try {
-      const res = await axios.get("http://localhost:3000/api/users/employees", {
+      const res = await axios.get("/api/users/employees", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -36,7 +36,7 @@ const CreateTask = ({ onTaskCreated }) => {
 
     try {
       await axios.post(
-        "http://localhost:3000/api/tasks",
+        "/api/tasks",
         {
           title: taskTitle,
           category,

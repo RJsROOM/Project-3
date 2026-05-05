@@ -11,7 +11,7 @@ const AdminDashboard = () => {
     const token = localStorage.getItem("token");
 
     try {
-      const res = await axios.get("http://localhost:3000/api/tasks", {
+      const res = await axios.get("/api/tasks", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
