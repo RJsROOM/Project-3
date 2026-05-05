@@ -4,10 +4,9 @@ const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-// register
 router.post("/register", async (req, res) => {
     try {
-        const { name, email, password, role } = req.body;
+        const { name, email, password } = req.body;
 
         const userExists = await User.findOne({ email });
         if (userExists) {
@@ -20,7 +19,7 @@ router.post("/register", async (req, res) => {
             name,
             email,
             password: hashedPassword,
-            role
+            role: "employee"
         });
 
         await user.save();
@@ -32,7 +31,6 @@ router.post("/register", async (req, res) => {
     }
 });
 
-// login
 router.post("/login", async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -45,6 +43,11 @@ router.post("/login", async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(400).json({ message: "Invalid credentials" });
+        }
+
+        if (user.role === "member") {
+            user.role = "employee";
+            await user.save();
         }
 
         const token = jwt.sign(
