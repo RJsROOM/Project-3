@@ -6,7 +6,12 @@ const jwt = require("jsonwebtoken");
 
 router.post("/register", async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+        const { name, email, password, role } = req.body;
+        const allowedRoles = ["admin", "employee"];
+
+        if (role && !allowedRoles.includes(role)) {
+            return res.status(400).json({ message: "Invalid role selected" });
+        }
 
         const userExists = await User.findOne({ email });
         if (userExists) {
@@ -19,12 +24,19 @@ router.post("/register", async (req, res) => {
             name,
             email,
             password: hashedPassword,
-            role: "employee"
+            role: role || "employee"
         });
 
         await user.save();
 
-        res.json({ message: "User registered successfully" });
+        res.json({
+            message: "User registered successfully",
+            user: {
+                id: user._id,
+                name: user.name,
+                role: user.role
+            }
+        });
 
     } catch (error) {
         res.status(500).json({ error: error.message });
